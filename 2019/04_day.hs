@@ -14,7 +14,7 @@ twoSame :: (Eq a) => [a] -> Bool
 twoSame = any ((==True) . (pairOp (==))) . pairs
 
 strictTwoSame :: (Eq a) => [a] -> Bool
-strictTwoSame xs = any (==(False, True, False)) $ triples $ (False:) $ (++[False]) $ map (pairOp (==)) $ pairs xs
+strictTwoSame = any (==(False, True, False)) . triples . (False:) . (++[False]) . map (pairOp (==)) . pairs
 
 solvePart1 :: Int
 solvePart1 = length $ filter twoSame $ filter nonDecreasing $ map show [153517..630395]
