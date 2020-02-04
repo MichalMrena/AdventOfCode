@@ -54,12 +54,6 @@ public:
     {
     }
 
-    auto init (const int p1, const int p2) -> void
-    {
-        state_.intcode_[1] = p1;
-        state_.intcode_[2] = p2;
-    }
-
     auto run () -> void
     {
         for (ever)
