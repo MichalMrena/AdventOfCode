@@ -25,11 +25,6 @@ struct state_t
       , eip_     {0}
     {
     }
-
-    auto op_code () const -> int
-    {
-        return intcode_.at(eip_);
-    }
 };
 
 class machine_t
