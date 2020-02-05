@@ -9,29 +9,20 @@ fromJust :: Maybe a -> a
 fromJust (Just x) = x
 
 orbitCount :: M.Map String String -> String -> Int
-orbitCount map object | Nothing == next = 0
-                      | otherwise       = 1 + (orbitCount map (fromJust next))
+orbitCount pMap object | Nothing == next = 0
+                       | otherwise       = 1 + (orbitCount pMap (fromJust next))
     where
-        next = M.lookup object map
+        next = M.lookup object pMap
 
 pathToCOM :: String -> [String]
 pathToCOM "COM" = ["COM"]
 pathToCOM from  = from:(pathToCOM $ fromJust $ M.lookup from precedenceMap)
 
-firstSame :: (Eq a) => [a] -> [a] -> a
-firstSame xs ys | 0 == lenDiff          = fst $ head $ dropWhile (uncurry (/=)) $ zip xs ys
-                | not $ null longerPart = head longerPart
-                | otherwise             = firstSame shorter (drop (abs lenDiff) longer)
-    where
-        lenDiff = (length xs) - (length ys)
-        (shorter, longer) = if (lenDiff < 0) then (xs, ys) else (ys, xs)
-        longerPart = filter (flip elem shorter) $ take (abs lenDiff) longer
-
 solvePart1 :: Int
 solvePart1 = sum $ map (orbitCount precedenceMap) $ map fst pairs 
 
 solvePart2 :: Int
-solvePart2 = let sameObj = firstSame youPath sanPath 
+solvePart2 = let sameObj = head $ L.intersect youPath sanPath 
                  youPath = pathToCOM $ fromJust $ M.lookup "YOU" precedenceMap   
                  sanPath = pathToCOM $ fromJust $ M.lookup "SAN" precedenceMap
              in (fromJust $ L.elemIndex sameObj youPath) + (fromJust $ L.elemIndex sameObj sanPath)
