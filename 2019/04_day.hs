@@ -4,17 +4,14 @@ pairs xs = zip xs $ tail xs
 triples :: [a] -> [(a, a, a)]
 triples xs = zip3 xs (tail xs) (tail $ tail xs)
 
-pairOp :: (a -> b -> c) -> (a, b) -> c
-pairOp op (x, y) = x `op` y
-
 nonDecreasing :: (Ord a) => [a] -> Bool
-nonDecreasing = all ((==True) . (pairOp (<=))) . pairs
+nonDecreasing = all ((==True) . (uncurry (<=))) . pairs
 
 twoSame :: (Eq a) => [a] -> Bool
-twoSame = any ((==True) . (pairOp (==))) . pairs
+twoSame = any ((==True) . (uncurry (==))) . pairs
 
 strictTwoSame :: (Eq a) => [a] -> Bool
-strictTwoSame = any (==(False, True, False)) . triples . (False:) . (++[False]) . map (pairOp (==)) . pairs
+strictTwoSame = any (==(False, True, False)) . triples . (False:) . (++[False]) . map (uncurry (==)) . pairs
 
 solvePart1 :: Int
 solvePart1 = length $ filter twoSame $ filter nonDecreasing $ map show [153517..630395]
