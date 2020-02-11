@@ -1,3 +1,3 @@
 # AdventOfCode
-Solution for advent of code puzzles https://adventofcode.com/ .  
-Solutions are in C++ and Haskell.
+Solutions of Advent of Code puzzles https://adventofcode.com/ .  
+Languages used are C++ and Haskell.
