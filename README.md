@@ -1,2 +1,2 @@
 # AdventOfCode
-Solutions of Advent of Code puzzles https://adventofcode.com/ and C++ and Haskell.
+Solutions of Advent of Code puzzles https://adventofcode.com/ in C++ and Haskell.
