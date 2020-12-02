@@ -2,3 +2,5 @@
 ./2019/buildDebug
 ./2019/buildRelease
 ./2019/Makefile
+./2019/main_r
+./2019/main_g
