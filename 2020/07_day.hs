@@ -8,10 +8,12 @@ type BagMap = Map BagName Bag
 parseBag :: BagMap -> String -> BagMap
 parseBag bagMap str = insertBag bagMap $ words $ filter (/= ',') $ init str
     where
-        insertBag bagMap (hue : color : _ : _ : rest) = M.insert (hue ++ color) (parseRest rest) bagMap
+        insertBag bm (hue : color : _ : _ : rest) = M.insert (hue ++ color) (parseRest rest) bm
+        insertBag _ _ = error "not good"
         parseRest [] = []
         parseRest ["no", "other", "bags"] = []
         parseRest (count : hue : color : _ : rest) = (read count, hue ++ color) : (parseRest rest)
+        parseRest _ = error "not good"
 
 parseInput :: IO BagMap
 parseInput = do
