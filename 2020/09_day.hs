@@ -16,7 +16,7 @@ findInvalid xs ps i | canBeSum x = findInvalid xs ps' (succ i)
         x          = xs ! i
         old        = xs ! (i - preambleSize)
         ps'        = S.insert x . S.delete old $ ps
-        canBeSum n = S.foldr (\p acc -> acc || (n - p) `S.member` ps) False ps
+        canBeSum n = S.foldr (\p acc -> (n - p) `S.member` ps || acc) False ps
 
 findSequence :: Vector Int -> Int -> Int -> Int -> Int -> (Int, Int)
 findSequence xs target csum i j | csum == target = (i, j)
