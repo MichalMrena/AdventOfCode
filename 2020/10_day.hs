@@ -6,8 +6,7 @@ parseInput :: String -> [Int]
 parseInput = sort . map read . lines
 
 solvePart1 :: [Int] -> Int
-solvePart1 xs = let pairs  = zip xs (tail xs)
-                    diffs  = map (uncurry subtract) pairs
+solvePart1 xs = let diffs  = zipWith subtract xs (tail xs)
                     count1 = length . filter (== 1) $ diffs
                     count3 = length . filter (== 3) $ diffs
                 in (count1 + 1) * (count3 + 1)
