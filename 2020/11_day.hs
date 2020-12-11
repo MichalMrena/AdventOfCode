@@ -1,4 +1,5 @@
 import Data.Vector (Vector, (!))
+import Control.Applicative (liftA2)
 import qualified Data.Vector as V
 
 data Cell = Floor | Empty | Taken deriving (Show, Eq)
@@ -20,7 +21,7 @@ parseInput str = let ls = lines str
         charToCell c   = error $ "Unknown char: " ++ [c]
 
 directions :: [(Int, Int)]
-directions = [(r, c) | r <- [-1, 0, 1], c <- [-1, 0, 1], (0, 0) /= (r, c) ]
+directions = filter (/= (0, 0)) $ liftA2 (,) [-1, 0, 1] [-1, 0, 1]
 
 inGrid :: Grid -> (Int, Int) -> Bool
 inGrid (Grid rc cc _) (r, c) = r >= 0 && r < rc && c >=0 && c < cc
