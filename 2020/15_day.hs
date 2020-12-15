@@ -1,8 +1,4 @@
-import Data.IntMap (IntMap)
 import qualified Data.IntMap as M
-
-parseInput :: [Int] -> IntMap Int
-parseInput =  M.fromList . zip [0 .. ]
 
 playGame :: Int -> [Int] -> Int
 playGame target xs = play initMemo (1 + length xs) (last xs)
