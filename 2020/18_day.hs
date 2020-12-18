@@ -63,4 +63,4 @@ solve :: IO ()
 solve = do
     input <- parseInput <$> readFile "./input/18_day.txt"
     putStrLn $ "Part 1: " ++ (show . solvePart1 $ input)
-    putStrLn $ "Part 1: " ++ (show . solvePart2 $ input)
+    putStrLn $ "Part 2: " ++ (show . solvePart2 $ input)
