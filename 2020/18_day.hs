@@ -32,8 +32,8 @@ parseInput = map parse . lines . filter (/= ' ')
                         processChar n ')' = pred n
                         processChar n _   = n
 
-justLeftEval :: [Element] -> Element
-justLeftEval = head . evalInner
+leftEval :: [Element] -> Element
+leftEval = head . evalInner
     where
         evalInner []  = []
         evalInner [c] = [c]
@@ -43,9 +43,9 @@ justLeftEval = head . evalInner
 
 precedenceEval :: [Element] -> Element
 precedenceEval es = case Mul `elemIndex` es of
-                        Nothing  -> justLeftEval es
+                        Nothing  -> leftEval es
                         (Just i) -> let (les, res) = splitAt i es
-                                    in justLeftEval [precedenceEval les, Mul, precedenceEval . tail $ res]
+                                    in leftEval [precedenceEval les, Mul, precedenceEval . tail $ res]
 
 evalExpression :: ([Element] -> Element) -> [Element] -> Element
 evalExpression evaluator = evaluator . map flatten
@@ -54,7 +54,7 @@ evalExpression evaluator = evaluator . map flatten
         flatten t             = t
 
 solvePart1 :: [[Element]] -> Int
-solvePart1 = sum . map (getVal . evalExpression justLeftEval)
+solvePart1 = sum . map (getVal . evalExpression leftEval)
 
 solvePart2 :: [[Element]] -> Int
 solvePart2 = sum . map (getVal . evalExpression precedenceEval)
