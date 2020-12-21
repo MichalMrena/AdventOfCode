@@ -64,8 +64,8 @@ solvePart1 ts = product . map getId $ corners
         isCorner  = fst . satisfies isEdge isEdge
         corners   = filter isCorner $ ts
 
-solvePart2 :: [Tile] -> Int
-solvePart2 ts = 0
+-- solvePart2 :: [Tile] -> Int
+solvePart2 ts = M.flatten $ M.fromList 1 12 topRow
     where
         allSides  = concat . map getBorders $ ts
         elemCount = \e -> length . filter ( == e)
@@ -78,6 +78,8 @@ solvePart2 ts = 0
         finishTopRow = snd $ foldl pickTopTile (side Right topLeft, []) (take 11 . repeat $ ())
         pickTopTile  = \(prevSide, pss) _ -> let nextPs = pickPixels $ findTile ts (== prevSide) isEdge
                                              in (side Right nextPs, nextPs : pss)
+
+        firstCol = []
 
 main :: IO ()
 main = do
