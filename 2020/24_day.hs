@@ -17,10 +17,6 @@ diff Northwest = (-1, 1)
 addPoints :: (Int, Int) -> (Int, Int) -> (Int, Int)
 addPoints (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)
 
-flipTile :: Tile -> Tile -> Tile
-flipTile _ Black = White
-flipTile _ White = Black
-
 parseInput :: String -> [[Move]]
 parseInput = map parseLine . lines
     where
@@ -40,6 +36,8 @@ initPositions = S.fromList
               . foldl' ft (M.singleton (0, 0) White)
               . map (map diff)
     where
+        flipTile _ Black = White
+        flipTile _ White = Black
         ft m ds = (\p -> M.insertWith flipTile p Black m) . foldl' addPoints (0, 0) $ ds
 
 solvePart1 :: [[Move]] -> Int
