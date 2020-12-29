@@ -4,7 +4,7 @@ import qualified Data.Map.Strict as M
 import qualified Data.Set as S
 
 data Tile = Black | White deriving (Show, Eq)
-data Move = East | West | Southeast | Northeast | Southwest | Northwest deriving (Show, Enum)
+data Move = East | West | Southeast | Northeast | Southwest | Northwest deriving (Show, Enum, Bounded)
 
 diff :: Move -> (Int, Int)
 diff East      = (1, 1)
@@ -48,7 +48,7 @@ solvePart2 = S.size . (!! 100) . iterate live . initPositions
     where
         live bs = (S.filter turnBlack ws) `S.union` (S.filter stayBlack bs)
             where
-                ds               = map diff [East .. Northwest]
+                ds               = map diff [minBound .. maxBound]
                 neighbours p     = S.fromList . liftA2 addPoints ds $ [p]
                 neighbourCount p = S.size . S.intersection bs . neighbours $ p
                 stayBlack        = (`elem` [1, 2]) . neighbourCount
