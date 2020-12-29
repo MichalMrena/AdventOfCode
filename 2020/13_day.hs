@@ -49,8 +49,8 @@ solvePart2 ids = chineseRemainder (map fst rd) (map snd rd)
         rs = zipWith subtract [0 ..] ids
         rd = filter ((/= 0) . snd) . zip rs $ ids
 
-solve :: IO ()
-solve = do
+main :: IO ()
+main = do
     (t, ids) <- parseInput <$> readFile "./input/13_day.txt"
     putStrLn $ "Part 1: " ++ (show . solvePart1 t $ ids)
     putStrLn $ "Part 2: " ++ (show . solvePart2   $ map fromIntegral ids)
