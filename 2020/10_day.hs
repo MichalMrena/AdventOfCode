@@ -21,8 +21,8 @@ solvePart2 xs' = let xs      = reverse (0 : xs')
                           x3 = M.findWithDefault 0 (x + 3) m
                       in M.insert x (x1 + x2 + x3) m
 
-solve :: IO ()
-solve = do
+main :: IO ()
+main = do
     xs <- parseInput <$> readFile "./input/10_day.txt"
     putStrLn $ "Part 1: " ++ (show . solvePart1 $ xs)
     putStrLn $ "Part 2: " ++ (show . solvePart2 $ xs)
