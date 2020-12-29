@@ -65,8 +65,8 @@ solvePart2 :: Grid -> Int
 solvePart2 g = let g' = simulate g visible 5
                in V.length . V.filter (== Taken) $ (cells g')
 
-solve :: IO ()
-solve = do
+main :: IO ()
+main = do
     g <- parseInput <$> readFile "./input/11_day.txt"
     putStrLn $ "Part 1: " ++ (show . solvePart1 $ g)
     putStrLn $ "Part 2: " ++ (show . solvePart2 $ g)
