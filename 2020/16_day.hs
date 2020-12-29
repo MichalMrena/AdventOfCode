@@ -54,8 +54,8 @@ solvePart2 (fields, myTicket, otherTickets) = product
                 (i, [name]) = head . dropWhile ((/= 1) . length . snd) . zip [0 .. ] $ xxs
                 xxs'        = map (filter (/= name)) xxs
 
-solve :: IO ()
-solve = do
+main :: IO ()
+main = do
     input <- parseInput <$> readFile "./input/16_day.txt"
     putStrLn $ "Part 1: " ++ (show . solvePart1 $ input)
     putStrLn $ "Part 2: " ++ (show . solvePart2 $ input)
