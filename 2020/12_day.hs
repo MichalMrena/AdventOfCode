@@ -51,8 +51,8 @@ solvePart2 :: [Action] -> Int
 solvePart2 as = let (x, y) = moveShipRelative as
                 in (abs x) + (abs y)
 
-solve :: IO ()
-solve = do
+main :: IO ()
+main = do
     as <- parseInput <$> readFile "./input/12_day.txt"
     putStrLn $ "Part 1: " ++ (show . solvePart1 $ as)
     putStrLn $ "Part 2: " ++ (show . solvePart2 $ as)
