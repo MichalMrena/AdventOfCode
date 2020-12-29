@@ -18,8 +18,8 @@ solvePart1 xs = playGame 2020 xs
 solvePart2 :: [Int] -> Int
 solvePart2 xs = playGame 30000000 xs
 
-solve :: IO ()
-solve = do
+main :: IO ()
+main = do
     xs <- read <$> readFile "./input/15_day.txt"
     putStrLn $ "Part 1: " ++ (show . solvePart1 $ xs)
     putStrLn $ "Part 2: " ++ (show . solvePart2 $ xs)
