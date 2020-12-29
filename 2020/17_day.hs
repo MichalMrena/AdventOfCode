@@ -49,8 +49,8 @@ solvePart1 = run neighbours3 . S.fromList . map (\(a, b) -> (a, b, 0))
 solvePart2 :: [Point2] -> Int
 solvePart2 = run neighbours4 . S.fromList . map (\(a, b) -> (a, b, 0, 0))
 
-solve :: IO ()
-solve = do
+main :: IO ()
+main = do
     ps <- parseInput <$> readFile "./input/17_day.txt"
     putStrLn $ "Part 1: " ++ (show . solvePart1 $ ps)
     putStrLn $ "Part 2: " ++ (show . solvePart2 $ ps)
