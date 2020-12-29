@@ -14,8 +14,7 @@ parseInput = (\[pk1, pk2] -> (pk1, pk2)) . map read . lines
 solvePart1 :: (Integer, Integer) -> Integer
 solvePart1 (pk1, pk2) = powMod pk1 l2 20201227
     where
-        ls t = fromIntegral . fromJust . elemIndex t . iterate ((`mod` 20201227) . (* 7)) $ 1
-        l2   = ls pk2
+        l2 = fromIntegral . fromJust . elemIndex pk2 . iterate ((`mod` 20201227) . (* 7)) $ 1
 
 main :: IO ()
 main = do
