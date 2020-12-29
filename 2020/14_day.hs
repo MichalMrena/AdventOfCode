@@ -40,8 +40,8 @@ solvePart2 = foldl1 (+) . fst . foldl execute (M.empty, Mask 0 0 0)
             | testBit xs i = (enumStep (succ i) xs (clearBit a i)) ++ (enumStep (succ i) xs (setBit a i))
             | otherwise    = enumStep (succ i) xs a
 
-solve :: IO ()
-solve = do
+main :: IO ()
+main = do
     is <- parseInput <$> readFile "./input/14_day.txt"
     putStrLn $ "Part 1: " ++ (show . solvePart1 $ is)
     putStrLn $ "Part 2: " ++ (show . solvePart2 $ is)
