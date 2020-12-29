@@ -39,8 +39,8 @@ solvePart2 xs = let target = solvePart1 xs
                     xs'    = V.slice i (j - i) xs
                 in (V.minimum xs') + (V.maximum xs')
 
-solve :: IO ()
-solve = do
+main :: IO ()
+main = do
     xs <- parseInput <$> readFile "./input/09_day.txt"
     putStrLn $ "Part 1: " ++ (show . solvePart1 $ xs)
     putStrLn $ "Part 2: " ++ (show . solvePart2 $ xs)
