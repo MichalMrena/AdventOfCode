@@ -59,8 +59,8 @@ solvePart1 = sum . map (getVal . evalExpression leftEval)
 solvePart2 :: [[Element]] -> Int
 solvePart2 = sum . map (getVal . evalExpression precedenceEval)
 
-solve :: IO ()
-solve = do
+main :: IO ()
+main = do
     input <- parseInput <$> readFile "./input/18_day.txt"
     putStrLn $ "Part 1: " ++ (show . solvePart1 $ input)
     putStrLn $ "Part 2: " ++ (show . solvePart2 $ input)
