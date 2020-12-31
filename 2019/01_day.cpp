@@ -2,7 +2,6 @@
 #include <fstream>
 #include <iostream>
 #include <numeric>
-#include <functional>
 
 auto parse_input () -> std::vector<int>
 {
