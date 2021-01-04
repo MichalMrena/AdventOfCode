@@ -205,7 +205,7 @@ auto contains_point (line const& l, point const p) -> bool
 
 auto line_length (line const& l) -> int
 {
-    return std::abs(l.a.x - l.b.x) + std::abs(l.a.y - l.b.y);
+    return manhattan_dist(l.a, l.b);
 }
 
 auto dist_to_point (wire const& ps, point const p) -> int
