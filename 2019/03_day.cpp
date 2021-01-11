@@ -44,7 +44,7 @@ auto parse_input () -> std::pair<wire, wire>
         int       val;
     };
 
-    auto split = [](auto const& s, auto const c)
+    auto const split = [](auto const& s, auto const c)
     {
         auto const delims = {c};
         auto const end    = std::cend(s);
@@ -72,7 +72,7 @@ auto parse_input () -> std::pair<wire, wire>
         return words;
     };
 
-    auto parse_move = [](auto const& s)
+    auto const parse_move = [](auto const& s)
     {
         auto const val = std::stoi(s.substr(1));
         switch (s[0])
@@ -85,7 +85,7 @@ auto parse_input () -> std::pair<wire, wire>
         }
     };
 
-    auto make_point = [p = point {0, 0}](auto const m) mutable
+    auto const make_point = [p = point {0, 0}](auto const m) mutable
     {
         switch (m.dir)
         {
@@ -97,7 +97,7 @@ auto parse_input () -> std::pair<wire, wire>
         }
     };
 
-    auto parse_row = [=](auto const& row)
+    auto const parse_row = [=](auto const& row)
     {
         auto const ws = split(row, ',');
         auto ms = std::vector<move>();
