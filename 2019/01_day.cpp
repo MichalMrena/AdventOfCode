@@ -30,20 +30,14 @@ auto fuel_requirement_2 (int const w) -> int
 
 auto solve_part_1 (std::vector<int> const& ns) -> int
 {
-    return std::accumulate(std::begin(ns), std::end(ns), 0,
-        [](auto const l, auto const r)
-    {
-        return l + fuel_requirement_1(r);
-    });
+    return std::transform_reduce( std::begin(ns), std::end(ns)
+                                , 0, std::plus<>(), fuel_requirement_1 );
 }
 
 auto solve_part_2 (std::vector<int> const& ns) -> int
 {
-    return std::accumulate(std::begin(ns), std::end(ns), 0,
-        [](auto const l, auto const r)
-    {
-        return l + fuel_requirement_2(r);
-    });
+    return std::transform_reduce( std::begin(ns), std::end(ns)
+                                , 0, std::plus<>(), fuel_requirement_2 );
 }
 
 auto main () -> int
