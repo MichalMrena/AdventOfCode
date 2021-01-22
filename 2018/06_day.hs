@@ -4,7 +4,6 @@ import Data.Maybe
 import qualified Data.IntMap as M
 
 type Point = (Int, Int)
-data Orientation = Clock | CounterClock | Colinear deriving (Show)
 
 parseInput :: String -> [Point]
 parseInput = map (read . ('(' : ) . (++ [')'])) . lines
