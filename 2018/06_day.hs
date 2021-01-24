@@ -18,7 +18,7 @@ solvePart1 ps = res + 1
         (tx, ty) = ((10 + ) . fst . maximumBy (compare `on` fst) $ ps, (10 + ) . snd . maximumBy (compare `on` snd) $ ps)
         grid     = [(x, y) | x <- [lx .. tx], y <- [ly .. ty], not $ (x, y) `elem` ps]
         hull     = zip [lx .. tx] (repeat ly) ++ zip [lx .. tx] (repeat ty) ++ zip (repeat lx) [ly .. ty] ++ zip (repeat tx) [ly .. ty]
-        hps      = map fromJust . filter isJust . map closest $ hull
+        hps      = nub . map fromJust . filter isJust . map closest $ hull
         pid      = \(x, y) -> 1000 * x + y
 
         closest p = if d1 /= d2 then Just (pid p1) else Nothing
