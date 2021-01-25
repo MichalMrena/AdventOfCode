@@ -21,7 +21,7 @@ solvePart1 arcs = reverse $ map itoc $ go inDegs []
                    | otherwise   = go inDs' (x : xs)
             where
                 x     = fst . head . dropWhile ((> 0) . snd) . M.toAscList $ inDs
-                inDs' =  M.delete x $ foldl (\m t -> M.adjust pred t m) inDs (fwStars ! x)
+                inDs' = M.delete x $ foldl (\m t -> M.adjust pred t m) inDs (fwStars ! x)
 
 solvePart2 :: [(Int, Int)] -> Int
 solvePart2 arcs = go initInDegs initTasks (5 - length initTasks)
