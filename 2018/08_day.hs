@@ -13,7 +13,7 @@ parseTree ns = head . fst $ parseNodes 1 ([], ns)
 solvePart1 :: [Int] -> Int
 solvePart1 = dataSum . parseTree
     where
-        dataSum (Tree sons ds) = sum ds + (sum $ map dataSum sons)
+        dataSum (Tree sons ds) = sum ds + sum (map dataSum sons)
 
 solvePart2 :: [Int] -> Int
 solvePart2 = dataSum . parseTree
@@ -27,6 +27,6 @@ solvePart2 = dataSum . parseTree
 
 main :: IO ()
 main = do
-    input <- (map read . words) <$> readFile "./input/08_day.txt"
+    input <- map read . words <$> readFile "./input/08_day.txt"
     putStrLn $ "Part 1: " ++ (show . solvePart1 $ input)
     putStrLn $ "Part 2: " ++ (show . solvePart2 $ input)
