@@ -7,7 +7,6 @@ import qualified Data.Array.Unboxed as A
 calcAreaSums :: Int -> A.Array (Int, Int) Int
 calcAreaSums serial = A.listArray ((0, 0), (300, 300))
                     $ concat
-                    $ transpose
                     $ scanl buildCol (replicate 301 0) [1 .. 300]
     where
         buildCol prevRow y = zipWith (+) prevRow $ scanl' (buildRow y) 0 [1 .. 300]
@@ -17,7 +16,7 @@ calcAreaSums serial = A.listArray ((0, 0), (300, 300))
 
 maxSquare :: A.Array (Int, Int) Int -> Int -> ((Int, Int, Int), Int)
 maxSquare ps s = maximumBy (comparing snd)
-               . map (\p@(x, y) -> ((y, x, s), squareSum p))
+               . map (\p@(x, y) -> ((x, y, s), squareSum p))
                . A.range $ ((1, 1), (301 - s, 301 - s))
     where
         squareSum (x, y) = (ps ! (y + s - 1, x + s - 1))
