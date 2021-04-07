@@ -1,52 +1,21 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
-#include <algorithm>
 #include <string>
 #include <array>
+#include <charconv>
 
 auto parse_input () -> std::vector<int>
 {
-    auto split = [](auto const& s, auto const c)
-    {
-        auto const delims = {c};
-        auto const end    = std::cend(s);
-        auto first        = std::cbegin(s);
-        auto words        = std::vector<std::string>();
-
-        while (first != end)
-        {
-            auto const last = std::find_first_of( first, end
-                                                , std::cbegin(delims)
-                                                , std::cend(delims) );
-            if (first != last)
-            {
-                words.emplace_back(first, last);
-            }
-
-            if (last == end)
-            {
-                break;
-            }
-
-            first = std::next(last);
-        }
-
-        return words;
-    };
-
     auto ns    = std::vector<int>();
     auto istr  = std::fstream("./input/02_day.txt");
-    auto line  = std::string();
-    std::getline(istr, line);
-    auto words = split(line, ',');
-
-    std::transform(std::begin(words), std::end(words), std::back_inserter(ns),
-        [](auto const& w)
+    auto chars = std::string();
+    while (std::getline(istr, chars, ','))
     {
-        return std::stoi(w);
-    });
-
+        auto n = int {};
+        std::from_chars(chars.data(), chars.data() + chars.size(), n);
+        ns.push_back(n);
+    }
     return ns;
 }
 
@@ -91,19 +60,19 @@ auto op_halt (intcode_machine&) -> bool
 }
 
 using op_t = bool(*)(intcode_machine&);
-auto constexpr make_op_table () -> std::array<op_t, 100>
+auto consteval make_op_table () -> std::array<op_t, 100>
 {
     auto ops = std::array<op_t, 100> {};
-    ops[1]  = op_add;
-    ops[2]  = op_mul;
-    ops[99] = op_halt;
+    ops[1]   = op_add;
+    ops[2]   = op_mul;
+    ops[99]  = op_halt;
     return ops;
 }
 
 auto execute_op (intcode_machine& machine) -> bool
 {
-    static auto constexpr Ops = make_op_table();
-    auto const opcode = static_cast<std::size_t>(machine.program[machine.eip]);
+    static auto constinit Ops = make_op_table();
+    auto const opcode = argv(machine, 0);
     return Ops[opcode](machine);
 }
 
@@ -143,7 +112,7 @@ auto solve_part_2 (std::vector<int> input) -> int
 
 auto main () -> int
 {
-    auto input = parse_input();
+    auto const input = parse_input();
     std::cout << "Part 1: " << solve_part_1(input) << '\n';
     std::cout << "Part 2: " << solve_part_2(input) << '\n';
 }
