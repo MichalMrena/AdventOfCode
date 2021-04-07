@@ -57,7 +57,7 @@ auto parse_input () -> std::pair<wire, wire>
                                                 , std::cbegin(delims)
                                                 , std::cend(delims) );
             if (first != last)
-            {
+            {				
                 words.emplace_back(first, last);
             }
 
