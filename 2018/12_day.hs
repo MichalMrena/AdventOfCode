@@ -4,7 +4,7 @@ type Patterns = [[Char]]
 grow :: Patterns -> (Int, Plants) -> (Int, Plants)
 grow ts (o, ps) = (o', ps')
     where
-        ps'' = go ("...." ++ ps ++ "....")
+        ps'' = go $ ("...." ++) . (ps ++) . ("...." ++) $ []
         ps'  = dropWhile (== '.') ps''
         o'   = o + (length (takeWhile (== '.') ps'') - 2)
 
