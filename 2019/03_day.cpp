@@ -1,12 +1,12 @@
 #include <vector>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <algorithm>
 #include <string>
 #include <utility>
 #include <cmath>
 #include <iterator>
-#include <functional>
 
 struct point
 {
@@ -44,34 +44,6 @@ auto parse_input () -> std::pair<wire, wire>
         int       val;
     };
 
-    auto const split = [](auto const& s, auto const c)
-    {
-        auto const delims = {c};
-        auto const end    = std::cend(s);
-        auto first        = std::cbegin(s);
-        auto words        = std::vector<std::string>();
-
-        while (first != end)
-        {
-            auto const last = std::find_first_of( first, end
-                                                , std::cbegin(delims)
-                                                , std::cend(delims) );
-            if (first != last)
-            {				
-                words.emplace_back(first, last);
-            }
-
-            if (last == end)
-            {
-                break;
-            }
-
-            first = std::next(last);
-        }
-
-        return words;
-    };
-
     auto const parse_move = [](auto const& s)
     {
         auto const val = std::stoi(s.substr(1));
@@ -85,28 +57,30 @@ auto parse_input () -> std::pair<wire, wire>
         }
     };
 
-    auto const make_point = [p = point {0, 0}](auto const m) mutable
+    auto make_point = [](auto const prev, auto const m)
     {
         switch (m.dir)
         {
-            case direction::up:    return p = point {p.x, p.y + m.val};
-            case direction::down:  return p = point {p.x, p.y - m.val};
-            case direction::left:  return p = point {p.x - m.val, p.y};
-            case direction::right: return p = point {p.x + m.val, p.y};
+            case direction::up:    return point {prev.x, prev.y + m.val};
+            case direction::down:  return point {prev.x, prev.y - m.val};
+            case direction::left:  return point {prev.x - m.val, prev.y};
+            case direction::right: return point {prev.x + m.val, prev.y};
             default: throw "not good";
         }
     };
 
-    auto const parse_row = [=](auto const& row)
+    auto parse_row = [=](auto const& row)
     {
-        auto const ws = split(row, ',');
-        auto ms = std::vector<move>();
-        std::transform( std::begin(ws), std::end(ws)
-                      , std::back_inserter(ms), parse_move );
-
-        auto ps = std::vector<point> {point {0, 0}};
-        std::transform( std::begin(ms), std::end(ms)
-                      , std::back_inserter(ps), make_point );
+        auto istr = std::istringstream(row);
+        auto s    = std::string();
+        auto ps   = std::vector<point> {point {0, 0}};
+        auto p    = ps.front();
+        while (std::getline(istr, s, ','))
+        {
+            auto const m = parse_move(s);
+            ps.push_back(make_point(p, m));
+            p = ps.back();
+        }
         return ps;
     };
 
