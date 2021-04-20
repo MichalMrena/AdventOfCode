@@ -1,6 +1,6 @@
 DAY_FILE = $(DAY)_day.cpp
 BIN_FILE = $(DAY)
-COMMON_FLAGS = -std=c++20 -Wall -Wextra -Wpedantic -Wconversion
+COMMON_FLAGS = -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow
 CXX = clang++-10
 
 .PHONY: clean
