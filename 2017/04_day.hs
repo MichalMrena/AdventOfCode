@@ -8,7 +8,9 @@ part1 = length . filter isValid
 part2 :: [[String]] -> Int
 part2 = length . filter isValid
   where
-    isValid ps = length ps == (length . nub . map sort $ ps)
+    isValid = do l1 <- length
+                 l2 <- length . nub . map sort
+                 return (l1 == l2)
 
 main :: IO ()
 main = do
