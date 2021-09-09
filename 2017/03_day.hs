@@ -20,13 +20,13 @@ part1 i = manDist (spiral !! (i - 1))
 part2 :: Int -> Int
 part2 t = head . dropWhile (< t) $ xs
   where
-        vals    = state <$> (cellVal <$> tail spiral)
-        (xs, _) = runState (sequence vals) (M.singleton (0, 0) 1)
-        cellVal p grid = (val, M.insert p val grid)
-          where add (a, b) (x, y) = (a + x, b + y)
-                adj = add <$> [p] <*> [ (-1, -1), (0, -1), (1, -1), (-1, 0)
-                                      , (1, 0), (-1, 1), (0, 1), (1, 1) ]
-                val = sum $ map (\p -> M.findWithDefault 0 p grid) adj
+    vals    = state <$> (cellVal <$> tail spiral)
+    (xs, _) = runState (sequence vals) (M.singleton (0, 0) 1)
+    cellVal p grid = (val, M.insert p val grid)
+      where add (a, b) (x, y) = (a + x, b + y)
+            adj = add <$> [p] <*> [ (-1, -1), (0, -1), (1, -1), (-1, 0)
+                                  , (1, 0), (-1, 1), (0, 1), (1, 1) ]
+            val = sum $ map (\p -> M.findWithDefault 0 p grid) adj
 
 main :: IO ()
 main = do
