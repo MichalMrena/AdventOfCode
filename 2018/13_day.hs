@@ -40,9 +40,15 @@ turn :: Cart -> Cart
 turn (Cart p d t) = Cart p (nextDir d t) (nextTurn t)
 
 bend :: Char -> Cart -> Cart
-bend '/'  ca = ca -- TODO
-bend '\\' ca = ca
-bend _    _  = undefined
+bend '/'  (Cart p North t) = Cart p East t
+bend '/'  (Cart p West t)  = Cart p South t
+bend '/'  (Cart p South t) = Cart p West t
+bend '/'  (Cart p East t)  = Cart p North t
+bend '\\' (Cart p North t) = Cart p West t
+bend '\\' (Cart p West t)  = Cart p North t
+bend '\\' (Cart p South t) = Cart p East t
+bend '\\' (Cart p East t)  = Cart p South t
+bend _    _                = undefined
 
 move :: Char -> Cart -> Cart
 move '+'   = turn
