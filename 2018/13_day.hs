@@ -1,6 +1,4 @@
 import           Control.Monad.Extra ( iterateM )
-import           Control.Monad ( forM_ )
-import           Data.Either ( Either(Right) )
 import           Data.List ( find, sortBy )
 import           Data.Function ( on )
 import           Data.Array.Unboxed ( (!), (//) )
