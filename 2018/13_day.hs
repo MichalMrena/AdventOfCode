@@ -51,7 +51,7 @@ bend '\\' (Cart p East t)  = Cart p South t
 bend _    _                = undefined
 
 move :: Char -> Cart -> Cart
-move '+'   = turn
+move '+'   = advance . turn
 move '/'   = advance . bend '/'
 move '\\'  = advance . bend '\\'
 move _     = advance
@@ -59,17 +59,36 @@ move _     = advance
 part1 :: Rails -> [Cart] -> (Int, Int)
 part1 rails initCs = case iterateM moveCarts initCs of
                          (Left (y, x)) -> (x, y)
-                         (Right _) -> undefined
+                         (Right _)     -> undefined
     where
         moveCarts :: [Cart] -> Either (Int, Int) [Cart]
         moveCarts = go [] . sortBy (compare `on` pos_)
             where
                 go ls [] = Right ls
-                go ls (r:rs) = case find (\x -> pos_ x == pos_ r') ls of
-                                   Nothing -> go (r' : ls) rs
+                go ls (r:rs) = case find ((== pos_ r'). pos_) (ls ++ rs) of
+                                   Nothing  -> go (r' : ls) rs
                                    (Just _) -> Left (pos_ r')
                     where
                         r' = move (rails ! pos_ r) r
+
+part2 :: Rails -> [Cart] -> (Int, Int)
+part2 rails initCs = case iterateM moveCarts initCs of
+                         (Left (y, x)) -> (x, y)
+                         (Right _)     -> undefined
+    where
+        moveCarts :: [Cart] -> Either (Int, Int) [Cart]
+        moveCarts cs = case go [] . sortBy (compare `on` pos_) $ cs of
+                           [c] -> Left (pos_ c)
+                           cs' -> Right cs'
+            where
+                go ls []     = ls
+                go ls (r:rs) = case find ((== pos_ r') . pos_) (ls ++ rs) of
+                                   Nothing  -> go (r' : ls) rs
+                                   (Just _) -> go ls' rs'
+                    where
+                        r'  = move (rails ! pos_ r) r
+                        ls' = filter ((/= pos_ r') . pos_) ls
+                        rs' = filter ((/= pos_ r') . pos_) rs
 
 main :: IO ()
 main = do
@@ -80,14 +99,7 @@ main = do
     let carts    = map (\(p, c) -> Cart p (arrToDir c) TLeft) cartPs
 
     putStrLn $ "Part 1: " ++ show (part1 rails carts)
-
-    -- putStrLn $ show nrow ++ " x " ++ show ncol
-    -- forM_ [0 .. nrow - 1] (\row -> do
-    --     forM_ [0 .. ncol - 1] (\col ->
-    --         putChar (railsCs ! (row, col)))
-    --     putStrLn "")
-
-    -- print cartPs
+    putStrLn $ "Part 2: " ++ show (part2 rails carts)
 
     where
         readToArr :: String -> ((Int, Int), Rails)
@@ -110,24 +122,3 @@ main = do
         arrToDir 'v' = South
         arrToDir '^' = North
         arrToDir _   = undefined
-
-
--- testm :: IO ()
--- testm = do
-
---     case iterateM' go [] of
---         (Right _) -> putStrLn "not good"
---         (Left s) -> putStrLn s
-
---     where
---         go :: [Int] -> Either String [Int]
---         go [] = Right [1]
---         go ys@(x:xs) | x < 10 = Right ((x+1):ys)
---                      | otherwise = Left "Done."
-
--- iterateM' :: (a -> Either String a) -> a -> Either String [a]
--- iterateM' f x = do
---     x' <- f x
---     (x':) `fmap` iterateM' f x'
---     -- f x >>= (\x' ->
---     --    (x':) `fmap` iterateM' f x' )
