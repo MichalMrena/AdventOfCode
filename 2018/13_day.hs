@@ -63,7 +63,7 @@ part1 rails initCs = case iterateM_ moveCarts initCs of
         moveCarts = go [] . sortBy (compare `on` pos_)
             where
                 go ls [] = Right ls
-                go ls (r:rs) = case find ((== pos_ r'). pos_) (ls ++ rs) of
+                go ls (r:rs) = case find ((== pos_ r') . pos_) (ls ++ rs) of
                                    Nothing  -> go (r' : ls) rs
                                    (Just _) -> Left (pos_ r')
                     where
