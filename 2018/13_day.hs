@@ -1,4 +1,4 @@
-import           Control.Monad.Extra ( iterateM )
+import           Control.Monad.Loops ( iterateM_ )
 import           Data.List ( find, sortBy )
 import           Data.Function ( on )
 import           Data.Array.Unboxed ( (!), (//) )
@@ -55,7 +55,7 @@ move '\\'  = advance . bend '\\'
 move _     = advance
 
 part1 :: Rails -> [Cart] -> (Int, Int)
-part1 rails initCs = case iterateM moveCarts initCs of
+part1 rails initCs = case iterateM_ moveCarts initCs of
                          (Left (y, x)) -> (x, y)
                          (Right _)     -> undefined
     where
@@ -70,7 +70,7 @@ part1 rails initCs = case iterateM moveCarts initCs of
                         r' = move (rails ! pos_ r) r
 
 part2 :: Rails -> [Cart] -> (Int, Int)
-part2 rails initCs = case iterateM moveCarts initCs of
+part2 rails initCs = case iterateM_ moveCarts initCs of
                          (Left (y, x)) -> (x, y)
                          (Right _)     -> undefined
     where
