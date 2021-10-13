@@ -18,28 +18,19 @@ realloc xs = V.imap (\i x -> if i < ti then succ x else x)
         ti    = restv `mod` len
 
 part1 :: V.Vector Int -> Int
-part1 banks = go (S.singleton banks) banks 1
+part1 = go S.empty 0 . iterate realloc
     where
-        xss = iterate realloc banks
-
-        go prev xs n
-            | xs' `S.member` prev = n
-            | otherwise           = go prev' xs' (n + 1)
-            where
-                xs'   = realloc xs
-                prev' = S.insert xs' prev
+        go prevs n (xs : xss)
+            | xs `S.member` prevs = n
+            | otherwise           = go (S.insert xs prevs) (n + 1) xss
 
 part2 :: V.Vector Int -> Int
-part2 banks = go (M.singleton banks 0) banks 1
+part2 = go M.empty 0 . iterate realloc
     where
-        xss = iterate realloc banks
-
-        go prev xs n = case M.lookup xs' prev of
-                           (Just i) -> n - i
-                           Nothing  -> go prev' xs' (n + 1)
-            where
-                xs'   = realloc xs
-                prev' = M.insert xs' n prev
+        go prevs n (xs : xss)
+            = case M.lookup xs prevs of
+                  (Just i) -> n - i
+                  Nothing  -> go (M.insert xs n prevs) (n + 1) xss
 
 main :: IO ()
 main = do
