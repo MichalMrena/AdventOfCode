@@ -1,35 +1,39 @@
+{-# LANGUAGE FlexibleContexts #-}
+
 module Day07 where
 
--- I import qualified so that it's clear which
--- functions are from the parsec library:
-import qualified Text.Parsec as Parsec
-
--- I am the error message infix operator, used later:
-import Text.Parsec ((<?>))
-
--- Imported so we can play with applicative things later.
--- not qualified as mostly infix operators we'll be using.
-import Control.Applicative
-
--- Get the Identity monad from here:
-import Control.Monad.Identity (Identity)
-
-
+import qualified Text.Parsec as P
+import           Control.Applicative ( Alternative((<|>)) )
+import           Data.List ((\\), nub)
 import qualified Data.Map as M
-import qualified Data.Set as S
 
+data Node = Node { weight_ :: Int
+                 , sons_   :: [String] } deriving Show
 
--- alias Parsec.parse for more concise usage in my examples:
-parse rule text = Parsec.parse rule "(source)" text
-
-
-data Program = Program Int [String] deriving Show
+part1 :: M.Map String Node -> String
+part1 graph = head (allNodes \\ nub notRoots)
+  where pairs    = M.toList graph
+        allNodes = map fst pairs
+        notRoots = concatMap (sons_ . snd) pairs
 
 solveDay :: IO ()
 solveDay = do
-    xs <- parse <$> readFile "input/07_day.txt"
-    putStrLn "done"
+  graph <- readGraph <$> readFile "input/07_day.txt"
+  putStrLn $ "Part 1: " ++ part1 graph
 
-    where
-        parseLine m s = M.empty
-        parse = foldl parseLine M.empty . lines
+  where
+    parseLine ms s = case P.parse node "" s of
+                       Right (k, p) -> M.insert k p ms
+                       Left e       -> error (show e)
+    readGraph = foldl parseLine M.empty . lines
+
+    node :: P.Parsec String () (String, Node)
+    node = do name <- P.many1 P.lower
+              P.string " ("
+              weight <- read <$> P.many1 P.digit
+              P.string ")"
+              ss <- sons <|> leaf
+              return (name, Node weight ss)
+      where
+        sons = P.string " -> " >> P.many1 P.lower `P.sepBy1` P.string ", "
+        leaf = P.eof >> return []
