@@ -1,33 +1,37 @@
-#include <iostream>
-#include <fstream>
-#include <utility>
-#include <string>
-#include <iterator>
-#include <charconv>
-#include <array>
 #include <algorithm>
+#include <array>
+#include <charconv>
+#include <fstream>
 #include <functional>
+#include <iostream>
 #include <iterator>
+#include <ranges>
+#include <string>
+#include <utility>
+
+namespace rs = std::ranges;
 
 auto parse_input () -> std::pair<int, int>
 {
     auto istr = std::fstream("./input/04_day.txt");
     auto line = std::string();
     std::getline(istr, line);
-    auto mid  = std::find(std::begin(line), std::end(line), '-');
-    auto midd = static_cast<std::size_t>(std::distance(std::begin(line), mid));
-    auto from = int(0);
-    auto to   = int(0);
-    std::from_chars(line.data(), line.data() + midd, from);
-    std::from_chars(line.data() + midd + 1, line.data() + midd + 1 + (line.size() - midd), to);
+    auto mid  = rs::find(line, '-');
+    auto midd = static_cast<std::size_t>(rs::distance(rs::begin(line), mid));
+    auto from = int {0};
+    auto to   = int {0};
+    std::from_chars( line.data(), line.data() + midd, from );
+    std::from_chars( line.data() + midd + 1
+                   , line.data() + midd + 1 + (line.size() - midd)
+                   , to );
     return {from, to};
 }
 
 auto to_digits (int n) -> std::array<int, 6>
 {
     auto ds  = std::array<int, 6>();
-    auto out = std::rbegin(ds);
-    auto end = std::rend(ds);
+    auto out = rs::rbegin(ds);
+    auto end = rs::rend(ds);
     while (out != end)
     {
         *out = n % 10;
@@ -42,20 +46,24 @@ auto solve_part_1 (int const from, int const to) -> int
     for (auto n = from; n <= to; ++n)
     {
         auto const digits     = to_digits(n);
-        auto const isPassword = std::adjacent_find(std::begin(digits), std::end(digits), std::greater<>())  == std::end(digits)
-                            and std::adjacent_find(std::begin(digits), std::end(digits), std::equal_to<>()) != std::end(digits);
+        auto const isPassword = rs::adjacent_find(digits, rs::greater())
+                             == rs::end(digits)
+                            and rs::adjacent_find(digits, rs::equal_to())
+                             != rs::end(digits);
         total += isPassword ? 1 : 0;
     }
     return total;
 }
 
-template<class ForwardIt>
-auto strict_pair_find (ForwardIt first, ForwardIt last) -> ForwardIt
+template<class R>
+auto strict_pair_find (R&& r)
 {
+    auto first = rs::begin(r);
+    auto last  = rs::end(r);
     while (first != last)
     {
         auto it   = first;
-        auto next = std::next(first);
+        auto next = rs::next(first);
         auto len  = 0;
         while (next != last and *it == *next)
         {
@@ -79,8 +87,10 @@ auto solve_part_2 (int const from, int const to) -> int
     for (auto n = from; n <= to; ++n)
     {
         auto const digits     = to_digits(n);
-        auto const isPassword = std::adjacent_find(std::begin(digits), std::end(digits), std::greater<>()) == std::end(digits)
-                            and strict_pair_find(std::begin(digits), std::end(digits)) != std::end(digits);
+        auto const isPassword = rs::adjacent_find(digits, rs::greater())
+                             == rs::end(digits)
+                            and strict_pair_find(digits)
+                             != rs::end(digits);
         total += isPassword ? 1 : 0;
     }
     return total;
