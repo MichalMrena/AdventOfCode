@@ -21,6 +21,7 @@ executable main
                     , Day11
                     , Day12
                     , Day13
+                    , Day14
     build-depends:    array       >=0.5.4.0
                     , base        >=4.15.0.0
                     , containers  >=0.6.4.1
