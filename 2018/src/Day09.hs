@@ -1,3 +1,5 @@
+module Day09 where
+
 import Data.List (maximumBy, foldl')
 import Data.Function (on)
 import Data.Maybe (fromJust)
@@ -8,7 +10,7 @@ data CircularList a = CircularList { pre   :: [a]
                                    , post  :: [a] }
 
 instance (Show a) => Show (CircularList a) where
-    show (CircularList ls f rs) = show (reverse ls) ++ " " ++ show f ++ " " ++ show rs
+  show (CircularList ls f rs) = show (reverse ls) ++ " " ++ show f ++ " " ++ show rs
 
 justOne :: a -> CircularList a
 justOne x = CircularList [] x []
@@ -40,29 +42,29 @@ insertLeft x (CircularList ls f rs) = CircularList ls x (f : rs)
 
 play :: Int -> Int -> Int
 play playerCount marbleCount = maximum $ map snd $ M.toList results
-    where
-        players = map (`mod` playerCount) [0, 1 ..]
-        marbles = [1 .. marbleCount]
-        steps   = zip players marbles
-        results = fst $ foldl' step (M.empty , justOne 0) steps
+  where
+    players = map (`mod` playerCount) [0, 1 ..]
+    marbles = [1 .. marbleCount]
+    steps   = zip players marbles
+    results = fst $ foldl' step (M.empty , justOne 0) steps
 
-        step (score, circle) (p, m) = (score', circle')
-            where
-                (s, circle') = emplace circle m
-                score'       = M.insertWith (+) p s score
+    step (score, circle) (p, m) = (score', circle')
+      where
+        (s, circle') = emplace circle m
+        score'       = M.insertWith (+) p s score
 
-        emplace circle m
-            | m `mod` 23 == 0 = let circle' = moveBy (-7) circle
-                                    m'      = focus circle'
-                                in (m + m', deleteRight circle')
+    emplace circle m
+      | m `mod` 23 == 0 = let circle' = moveBy (-7) circle
+                              m'      = focus circle'
+                          in (m + m', deleteRight circle')
 
-            | otherwise       = let circle' = insertLeft m $ moveBy 2 circle
-                                in (0, circle')
+      | otherwise       = let circle' = insertLeft m $ moveBy 2 circle
+                          in (0, circle')
 
-main :: IO ()
-main = do
-    (playerCount, marbleCount) <- parseInput <$> readFile "./input/09_day.txt"
-    putStrLn $ "Part 1: " ++ show (play playerCount marbleCount)
-    putStrLn $ "Part 2: " ++ show (play playerCount (marbleCount * 100))
-    where
-        parseInput s = (read $ head ws, read $ ws !! 6) where ws = words s
+solveDay :: IO ()
+solveDay = do
+  (playerCount, marbleCount) <- parseInput <$> readFile "input/09_day.txt"
+  putStrLn $ "Part 1: " ++ show (play playerCount marbleCount)
+  putStrLn $ "Part 2: " ++ show (play playerCount (marbleCount * 100))
+  where
+    parseInput s = (read $ head ws, read $ ws !! 6) where ws = words s
