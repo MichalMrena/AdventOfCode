@@ -13,6 +13,7 @@ executable main
                     , Day03
                     , Day04
                     , Day05
+                    , Day06
     build-depends:    base       >=4.15.0.0
                     , parsec     >=3.1.14.0
     hs-source-dirs:   src
