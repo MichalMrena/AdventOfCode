@@ -38,9 +38,11 @@ solveDay = do
   ls <- lines <$> readFile "input/09_day.txt"
   let rc  = 2 + length ls
       cc  = 2 + length (head ls)
-      rxs = wrap cc (map (((10 : ) . (++ [10])) . parseLine) ls)
+      rxs = wrap cc (map parseLine ls)
       xss = listArray ((0, 0), (rc - 1, cc - 1)) (concat rxs)
   putStrLn $ "Part 1: " ++ (show . part1 $ xss)
   putStrLn $ "Part 2: " ++ (show . part2 $ xss)
   where parseLine  = map (subtract (ord '0') . ord)
-        wrap cc xs = [replicate cc 10] ++ xs ++ [replicate cc 10]
+        wrap cc = ([replicate cc 10] ++)
+                . (++ [replicate cc 10])
+                . map ((10 : ) . (++ [10]))
