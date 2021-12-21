@@ -16,9 +16,11 @@ executable main
                     , Day06
                     , Day07
                     , Day08
+                    , Day09
     build-depends:    base       >=4.15.0.0
                     , parsec     >=3.1.14.0
                     , containers >=0.6.4.1
+                    , array      >=0.5.4.0
     hs-source-dirs:   src
     default-language: Haskell2010
     ghc-options:      -O2 -main-is Main
