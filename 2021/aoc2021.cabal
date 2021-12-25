@@ -19,6 +19,7 @@ executable main
                     , Day09
                     , Day10
                     , Day11
+                    , Day12
     build-depends:    base       >=4.15.0.0
                     , parsec     >=3.1.14.0
                     , containers >=0.6.4.1
