@@ -2,6 +2,7 @@ module Day16 where
 
 import           Data.List ( foldl' )
 import qualified Text.Parsec as P
+import qualified Data.Functor.Identity as Id
 
 data PacketBody = Literal Int
                 | Operator [Packet] deriving Show
@@ -33,25 +34,28 @@ binToDec = foldl' (\acc b -> 2 * acc + ctoi b) 0
   where ctoi '0' = 0
         ctoi '1' = 1
 
--- parseLiteral :: String -> PacketBody
--- parseLiteral = Literal . binToDec . go
---   where go ('0' : bs) = take 4 bs
---         go ('1' : bs) = take 4 bs ++ go (drop 4 bs)
+literalPacket :: P.ParsecT String u Id.Identity PacketBody
+literalPacket = Literal . binToDec <$> go
+  where go = do b <- P.digit
+                if b == '0' then P.count 4 P.digit
+                            else do part <- P.count 4 P.digit
+                                    rest <- go
+                                    return (part ++ rest)
 
--- parseOperator :: String -> PacketBody
--- parseOperator (lenTypId : bits) = Literal 0
---   where x = 1
+operatorPacket :: P.ParsecT String u Id.Identity PacketBody
+operatorPacket = return (Literal 0)
 
--- parseBody :: Int -> String -> PacketBody
--- parseBody typeId = if typeId == 4 then parseLiteral else parseOperator
+packetBody :: Int -> P.ParsecT String u Id.Identity PacketBody
+packetBody typeId = if typeId == 4 then literalPacket else operatorPacket
 
--- parsePacket :: String -> Packet
--- parsePacket bits = Packet version typeId body
---   where version = binToDec . take 3 $ bits
---         typeId  = binToDec . take 3 . drop 3 $ bits
---         body    = parseBody typeId (drop 6 bits)
+packet :: P.ParsecT String u Id.Identity Packet
+packet = do version <- binToDec <$> P.count 3 P.digit
+            typeId  <- binToDec <$> P.count 3 P.digit
+            body    <- packetBody typeId
+            return $ Packet version typeId body
 
--- TODO will be better with parsec
+parsePacket :: String -> Either P.ParseError Packet
+parsePacket = P.parse packet ""
 
 part1 :: String -> Int
 part1 str = 0
