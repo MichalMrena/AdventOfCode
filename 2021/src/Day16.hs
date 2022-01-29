@@ -1,5 +1,6 @@
 module Day16 where
 
+import           Data.Bool ( bool )
 import           Data.List ( foldl' )
 import qualified Text.Parsec as P
 import qualified Data.Functor.Identity as Id
@@ -43,7 +44,15 @@ literalPacket = Literal . binToDec <$> go
                                     return (part ++ rest)
 
 operatorPacket :: P.ParsecT String u Id.Identity PacketBody
-operatorPacket = return (Literal 0)
+operatorPacket = do lenTypeId <- P.digit
+                    if lenTypeId == '0'
+                      then do bitLen <- binToDec <$> P.count 15 P.digit
+                              bits <- P.count bitLen P.digit
+                              return (Operator (parseManyPackets bits))
+                      else do subPacketCount <- binToDec <$> P.count 11 P.digit
+                              Operator <$> P.count subPacketCount packet
+  where parseManyPackets = unpack . P.parse (P.many packet) ""
+        unpack = either (error . show) id
 
 packetBody :: Int -> P.ParsecT String u Id.Identity PacketBody
 packetBody typeId = if typeId == 4 then literalPacket else operatorPacket
@@ -54,18 +63,28 @@ packet = do version <- binToDec <$> P.count 3 P.digit
             body    <- packetBody typeId
             return $ Packet version typeId body
 
-parsePacket :: String -> Either P.ParseError Packet
-parsePacket = P.parse packet ""
+parsePacket :: String -> Packet
+parsePacket = unpack . P.parse packet "" . concatMap hexToBin
+  where unpack = either (error . show) id
 
 part1 :: String -> Int
-part1 str = 0
+part1 = go . parsePacket
+  where go (Packet v _ (Literal _)) = v
+        go (Packet v _ (Operator ps)) = v + sum (map go ps)
 
 part2 :: String -> Int
-part2 str = 0
+part2 = go . parsePacket
+  where go (Packet _ _ (Literal v)) = v
+        go (Packet _ 0 (Operator ps)) = sum (map go ps)
+        go (Packet _ 1 (Operator ps)) = product (map go ps)
+        go (Packet _ 2 (Operator ps)) = minimum (map go ps)
+        go (Packet _ 3 (Operator ps)) = maximum (map go ps)
+        go (Packet _ 5 (Operator [p1, p2])) = bool 0 1 (go p1 > go p2)
+        go (Packet _ 6 (Operator [p1, p2])) = bool 0 1 (go p1 < go p2)
+        go (Packet _ 7 (Operator [p1, p2])) = bool 0 1 (go p1 == go p2)
 
 solveDay :: IO ()
 solveDay = do
   input <- readFile "input/16_day.txt"
   putStrLn $ "Part 1: " ++ (show . part1 $ input)
   putStrLn $ "Part 2: " ++ (show . part2 $ input)
-  print input
