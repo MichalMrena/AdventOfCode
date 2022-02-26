@@ -83,6 +83,8 @@ part2 = go . parsePacket
         go (Packet _ 6 (Operator [p1, p2])) = bool 0 1 (go p1 < go p2)
         go (Packet _ 7 (Operator [p1, p2])) = bool 0 1 (go p1 == go p2)
 
+-- TODO use parsec on bits just like
+-- https://github.com/nicuveo/advent-of-code/blob/main/2021/haskell/src/Day16.hs
 solveDay :: IO ()
 solveDay = do
   input <- readFile "input/16_day.txt"
