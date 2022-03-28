@@ -17,6 +17,7 @@ import qualified Day14 ( solveDay )
 import qualified Day15 ( solveDay )
 import qualified Day16 ( solveDay )
 import qualified Day17 ( solveDay )
+import qualified Day18 ( solveDay )
 import           Control.Monad ( zipWithM_ )
 
 main :: IO ()
@@ -38,6 +39,7 @@ main = do
                        , Day14.solveDay
                        , Day15.solveDay
                        , Day16.solveDay
-                       , Day17.solveDay ]
+                       , Day17.solveDay
+                       , Day18.solveDay ]
     let printDay i s = putStrLn ("* Day " ++ show i) >> s >> putStrLn ""
     zipWithM_ printDay [1 .. length solutions] solutions
