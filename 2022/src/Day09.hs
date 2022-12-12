@@ -6,7 +6,7 @@ import qualified Data.Set as S
 import           Text.Parsec ( (<|>) )
 import qualified Text.Parsec as P
 
-data Move = R Int | L Int | U Int | D Int deriving Show
+data Move  = R Int | L Int | U Int | D Int deriving Show
 type Point = (Int, Int)
 
 pOp :: (Int -> Int -> Int) -> Point -> Point -> Point
@@ -25,19 +25,31 @@ vectorize = concatMap f
         f (U d) = replicate d (0, -1)
         f (D d) = replicate d (0, 1)
 
+moveTail :: Point -> Point -> Point
+moveTail ph pt = pt'
+  where diff@(dx, dy) = ph <-> pt
+        needMove      = (abs dx) >= 2 || (abs dy) >= 2
+        adjustDiff s  = (s `rem` 2) + (s `quot` 2)
+        diff'         = bimap adjustDiff adjustDiff diff
+        pt'           = if needMove then pt <+> diff' else pt
+
+solve :: Int -> [Move] -> Int
+solve knots = S.size . fst
+            . foldl' f (S.singleton (0,0), ((0,0), replicate (knots-1) (0,0)))
+            . vectorize
+  where f (acc, (ph, pts)) m = (acc', (ph', pts'))
+          where ph'  = ph <+> m
+                pts' = go ph' pts
+                acc' = S.insert (last pts') acc
+                go _ [] = []
+                go h (t:ts) = t' : go t' ts
+                  where t' = moveTail h t
+
 part1 :: [Move] -> Int
-part1 = S.size . fst . foldl' go (S.singleton (0,0), ((0,0), (0,0))) . vectorize
-  where go (acc, (ph, pt)) m  = (acc', (ph', pt'))
-          where ph'           = ph <+> m
-                diff@(dx, dy) = ph' <-> pt
-                needMove      = (abs dx) >= 2 || (abs dy) >= 2
-                adjustDiff s  = (s `rem` 2) + (s `quot` 2)
-                diff'         = bimap adjustDiff adjustDiff diff
-                pt'           = if needMove then pt <+> diff' else pt
-                acc'          = S.insert pt' acc
+part1 = solve 2
 
 part2 :: [Move] -> Int
-part2 = const 2
+part2 = solve 10
 
 solveDay :: IO ()
 solveDay = do
